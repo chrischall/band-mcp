@@ -1,7 +1,7 @@
 import { createHmac } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { describe, expect, it, vi } from 'vitest';
-import { McpToolError, WriteOutcomeUnknownError } from '@chrischall/mcp-utils';
+import { McpToolError, WriteOutcomeUnknownError, writeOutcomeStatus } from '@chrischall/mcp-utils';
 import { AKEY, API_BASE, BandApiError, BandClient, tzOffsetMs } from '../src/client.js';
 import { BandSessionError } from '../src/session.js';
 import type { SessionCookies } from '../src/transport.js';
@@ -93,23 +93,45 @@ describe('BandClient.get', () => {
     expect(readCookies).toHaveBeenCalledTimes(1);
   });
 
-  it('300 → invalidates, re-lifts once, retries once', async () => {
-    const { client, sent, readCookies, fetchGetKey } = clientWith([{ result_code: 300, result_data: { message: 'auth' } }, ok({ x: 1 })]);
+  it('300 on a session cached from an earlier call → invalidates, re-lifts once, retries once', async () => {
+    const { client, sent, readCookies, fetchGetKey } = clientWith([ok({}), { result_code: 300, result_data: { message: 'auth' } }, ok({ x: 1 })]);
+    await client.get('/warm');
     await expect(client.get('/v2.1.0/get_profile')).resolves.toEqual({ x: 1 });
-    expect(sent).toHaveLength(2);
+    expect(sent).toHaveLength(3);
     expect(readCookies).toHaveBeenCalledTimes(2);
     expect(fetchGetKey).toHaveBeenCalledTimes(2);
   });
 
+  it('300 on a session lifted for this very call → BandSessionError at once (re-reading the browser would give the same)', async () => {
+    const { client, sent, readCookies } = clientWith([{ result_code: 300, result_data: { message: 'auth' } }]);
+    const err = await rejectionOf<BandSessionError>(client.get('/v2.1.0/get_profile'));
+    expect(err).toBeInstanceOf(BandSessionError);
+    expect(err.hint).toMatch(/renew/);
+    expect(sent).toHaveLength(1);
+    expect(readCookies).toHaveBeenCalledTimes(1);
+    expect(client.session.peek()).toBeUndefined();
+  });
+
   it('300 twice → BandSessionError telling the user to open band.us (no third attempt)', async () => {
     const no = { result_code: 300, result_data: { message: 'not authorized' } };
-    const { client, sent } = clientWith([no, no]);
+    const { client, sent } = clientWith([ok({}), no, no]);
+    await client.get('/warm');
     const err = await rejectionOf<BandSessionError>(client.get('/v2.1.0/get_profile'));
     expect(err).toBeInstanceOf(BandSessionError);
     expect(err.message).toMatch(/300/);
     expect(err.hint).toMatch(/https:\/\/www\.band\.us\//);
     expect(err.hint).toMatch(/renew/);
-    expect(sent).toHaveLength(2);
+    expect(sent).toHaveLength(3);
+  });
+
+  it('concurrent calls rejected with 300 share ONE re-lift', async () => {
+    const no = { result_code: 300, result_data: {} };
+    const { client, sent, readCookies } = clientWith([ok({}), no, no, ok({ a: 1 }), ok({ b: 2 })]);
+    await client.get('/warm');
+    const results = await Promise.all([client.get('/a'), client.get('/b')]);
+    expect(results).toEqual([{ a: 1 }, { b: 2 }]);
+    expect(sent).toHaveLength(5);
+    expect(readCookies).toHaveBeenCalledTimes(2);
   });
 
   it('non-1 result_code → BandApiError with the message and a hint', async () => {
@@ -186,9 +208,21 @@ describe('BandClient.post', () => {
   });
 
   it('300 on a POST re-lifts and retries once (the write was refused, not applied)', async () => {
-    const { client, sent } = clientWith([{ result_code: 300, result_data: {} }, ok({ done: true })]);
+    const { client, sent } = clientWith([ok({}), { result_code: 300, result_data: {} }, ok({ done: true })]);
+    await client.get('/warm');
     await expect(client.post('/w', { a: 1 })).resolves.toEqual({ done: true });
-    expect(sent).toHaveLength(2);
+    expect(sent).toHaveLength(3);
+  });
+
+  it('a POST answered with no envelope is WriteOutcomeUnknownError (it may have landed), never replayed', async () => {
+    for (const answer of [new Response('<html>502 Bad Gateway</html>', { status: 502 }), new Response('[]', { status: 200 })]) {
+      const { client, sent } = clientWith([answer]);
+      const err = await rejectionOf<WriteOutcomeUnknownError>(client.post('/w', { a: 1 }));
+      expect(err).toBeInstanceOf(WriteOutcomeUnknownError);
+      expect(err.hint).toMatch(/Re-read/);
+      expect(writeOutcomeStatus(err)).toBe(answer.status);
+      expect(sent).toHaveLength(1);
+    }
   });
 
   it('a POST transport failure is WriteOutcomeUnknownError (never replayed)', async () => {

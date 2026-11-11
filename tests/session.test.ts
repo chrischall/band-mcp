@@ -52,6 +52,26 @@ describe('BandSession', () => {
     expect(session.peek()).toEqual(info);
   });
 
+  it('reads the account (userNo claim) from band_session; absent when the claim is missing or not a number', async () => {
+    const a = sessionWith({ cookies: async () => ({ band_session: bandSessionJwt(86_400, { userNo: 4242 }) }) });
+    expect((await a.session.get()).userNo).toBe(4242);
+    const b = sessionWith({ cookies: async () => ({ band_session: bandSessionJwt(86_400, { userNo: 'x' }) }) });
+    expect((await b.session.get()).userNo).toBeUndefined();
+    const c = sessionWith();
+    expect('userNo' in (await c.session.get())).toBe(false);
+  });
+
+  it('invalidate(info) drops the cache only while `info` is still the cached session', async () => {
+    const { session, readCookies } = sessionWith();
+    const first = await session.get();
+    session.invalidate(first);
+    const second = await session.get();
+    expect(second).not.toBe(first);
+    session.invalidate(first); // stale: a concurrent caller already re-lifted
+    expect(session.peek()).toBe(second);
+    expect(readCookies).toHaveBeenCalledTimes(2);
+  });
+
   it('a missing timeCorrection means zero skew', async () => {
     const { session } = sessionWith({ getKey: async () => getKeyBody({ timeCorrection: null }) });
     expect((await session.get()).clockSkewMs).toBe(0);
@@ -86,11 +106,9 @@ describe('BandSession', () => {
     const { session, readCookies } = sessionWith();
     expect(session.generation).toBe(0);
     expect(session.recent()).toEqual([]);
-    await session.get();
-    session.invalidate();
+    session.invalidate(await session.get());
     expect(session.peek()).toBeUndefined();
-    await session.get();
-    session.invalidate();
+    session.invalidate(await session.get());
     await session.get();
     expect(readCookies).toHaveBeenCalledTimes(3);
     expect(session.generation).toBe(3);

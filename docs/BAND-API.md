@@ -63,11 +63,16 @@ Always HTTP 200 with `{ "result_code": <n>, "result_data": … }`.
 | `result_code` | Meaning | Handling |
 |---|---|---|
 | `1` | ok | `result_data` is the answer |
-| `300` | not authorized (expired session or stale key) | drop the session, lift it again, retry once; a second `300` is a session error |
+| `300` | not authorized (expired session or stale key) | drop the session, lift it again, retry once; a second `300` is a session error. A session lifted for that same call is not re-lifted (the browser would hand back the same one), and concurrent `300`s share one re-lift |
 | `1000` | deleted / not found | tool error |
 | `200`, `251` | "Temporary/Unknown error" — usually a bad or missing parameter | tool error |
 
 Any other code is a tool error carrying `result_data.message`.
+
+An answer that is not this envelope at all (an outage page, a proxy error) is
+a tool error for a read. For a write it is reported as *outcome unknown*: the
+POST may have been applied before something else answered, so the user is told
+to re-read the post or comments before retrying.
 
 ## Read endpoints
 
