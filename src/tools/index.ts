@@ -4,10 +4,23 @@
 
 import type { McpServer } from '@modelcontextprotocol/server';
 import type { BandClient } from '../client.js';
+import { registerBandTools } from './bands.js';
+import { registerChatTools } from './chats.js';
+import { registerEventTools } from './events.js';
+import { registerHealthcheckTool } from './healthcheck.js';
+import { registerNewsTools } from './news.js';
+import { registerPostTools } from './posts.js';
 
 /** The dependency every registrar receives: the signed BAND API client. */
 export type ToolDeps = BandClient;
 
 export type ToolRegistrar = (server: McpServer, client: ToolDeps) => void;
 
-export const TOOL_REGISTRARS: readonly ToolRegistrar[] = [];
+export const TOOL_REGISTRARS: readonly ToolRegistrar[] = [
+  registerHealthcheckTool,
+  registerNewsTools,
+  registerBandTools,
+  registerPostTools,
+  registerEventTools,
+  registerChatTools,
+];

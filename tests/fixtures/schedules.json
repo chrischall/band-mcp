@@ -1,0 +1,80 @@
+{
+ "result_code": 1,
+ "result_data": {
+  "paging": {
+   "previous_params": null,
+   "next_params": null
+  },
+  "items": [
+   {
+    "name": "sample name 1",
+    "description": "sample description 2",
+    "is_updated": false,
+    "comment_count": 0,
+    "subscribed_calendar": {
+     "name": "sample name 3",
+     "type": "holiday",
+     "id": "sample id 4"
+    },
+    "has_more_linked_posts": false,
+    "band_no": 100005,
+    "is_lunar": false,
+    "start_at": "sample start_at 6",
+    "end_at": "sample end_at 7",
+    "is_delete": false,
+    "schedule_type": "subscribed_calendar",
+    "schedule_id": "sample schedule_id 8",
+    "is_all_day": true,
+    "secret_sharers": [],
+    "update_notification_available": false,
+    "is_new": false
+   },
+   {
+    "name": "sample name 9",
+    "description": "sample description 10",
+    "is_updated": false,
+    "comment_count": 0,
+    "subscribed_calendar": {
+     "name": "sample name 11",
+     "type": "holiday",
+     "id": "sample id 12"
+    },
+    "has_more_linked_posts": false,
+    "band_no": 100013,
+    "is_lunar": false,
+    "start_at": "sample start_at 14",
+    "end_at": "sample end_at 15",
+    "is_delete": false,
+    "schedule_type": "subscribed_calendar",
+    "schedule_id": "sample schedule_id 16",
+    "is_all_day": true,
+    "secret_sharers": [],
+    "update_notification_available": false,
+    "is_new": false
+   },
+   {
+    "name": "sample name 17",
+    "description": "sample description 18",
+    "is_updated": false,
+    "comment_count": 0,
+    "subscribed_calendar": {
+     "name": "sample name 19",
+     "type": "holiday",
+     "id": "sample id 20"
+    },
+    "has_more_linked_posts": false,
+    "band_no": 100021,
+    "is_lunar": false,
+    "start_at": "sample start_at 22",
+    "end_at": "sample end_at 23",
+    "is_delete": false,
+    "schedule_type": "subscribed_calendar",
+    "schedule_id": "sample schedule_id 24",
+    "is_all_day": true,
+    "secret_sharers": [],
+    "update_notification_available": false,
+    "is_new": false
+   }
+  ]
+ }
+}

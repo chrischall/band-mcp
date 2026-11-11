@@ -1,0 +1,51 @@
+{
+ "result_code": 1,
+ "result_data": {
+  "members": [
+   {
+    "me": true,
+    "user_no": 100001,
+    "name": "sample name 2",
+    "profile_image_url": "https://example.invalid/profile_image_url",
+    "role": "member",
+    "created_at": 1794007200000,
+    "online": true
+   },
+   {
+    "user_no": 100004,
+    "name": "sample name 5",
+    "profile_image_url": "https://example.invalid/profile_image_url",
+    "role": "leader",
+    "created_at": 1794018000000,
+    "online": false
+   },
+   {
+    "user_no": 100007,
+    "name": "sample name 8",
+    "profile_image_url": "https://example.invalid/profile_image_url",
+    "role": "coleader",
+    "created_at": 1794028800000,
+    "online": false
+   }
+  ],
+  "member_count": 59,
+  "has_more_member": false,
+  "has_member_group": false,
+  "is_member_selectable_for_chat": true,
+  "is_member_selectable_for_ban": false,
+  "available_sort_orders": [
+   "sample available_sort_orders 10",
+   "sample available_sort_orders 11"
+  ],
+  "manage_member_group": false,
+  "manage_open_cellphone_and_birthday": false,
+  "manage_show_online_member": false,
+  "ban_member": false,
+  "manage_location": false,
+  "configure_member_permission": false,
+  "manage_member_description_required": false,
+  "is_savable_contact_list": true,
+  "is_savable_member_list": false,
+  "open_birthday": false
+ }
+}

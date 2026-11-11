@@ -1,0 +1,81 @@
+{
+ "result_code": 1,
+ "result_data": {
+  "channels": [
+   {
+    "name": "sample name 1",
+    "updated_at": 1794003600000,
+    "notification": "on",
+    "chat_push_type": "PUSH",
+    "member_push_enabled": true,
+    "message_period": "year",
+    "participants": [
+     {
+      "user_no": 100003,
+      "band_no": 100004,
+      "name": "sample name 5",
+      "profile_image_url": "https://example.invalid/profile_image_url",
+      "role": "leader",
+      "member_type": "membership",
+      "me": false,
+      "member_key": "sample member_key 6",
+      "created_at": 1794021600000
+     },
+     {
+      "user_no": 100008,
+      "band_no": 100009,
+      "name": "sample name 10",
+      "profile_image_url": "https://example.invalid/profile_image_url",
+      "role": "member",
+      "member_type": "membership",
+      "me": false,
+      "member_key": "sample member_key 11",
+      "created_at": 1794039600000
+     },
+     {
+      "user_no": 100013,
+      "band_no": 100014,
+      "name": "sample name 15",
+      "profile_image_url": "https://example.invalid/profile_image_url",
+      "role": "member",
+      "member_type": "membership",
+      "me": false,
+      "member_key": "sample member_key 16",
+      "created_at": 1794057600000
+     }
+    ],
+    "band": {
+     "type": "group",
+     "is_recruiting": false,
+     "band_no": 100018,
+     "name": "sample name 19",
+     "cover": "https://example.invalid/cover",
+     "theme_color": "sample theme_color 20"
+    },
+    "user_status": "ready",
+    "new_message_count": 0,
+    "unread_count_visible": true,
+    "is_pinned": false,
+    "is_big": false,
+    "message_period_as_minute": 100021,
+    "participant_count_max": 2000,
+    "is_creator_quit_disabled": false,
+    "latest_read_message_no": 0,
+    "oldest_readable_message_no": 0,
+    "oldest_server_message_no": 1,
+    "latest_message": {
+     "creator": {},
+     "is_viewer_referred": false
+    },
+    "has_viewer_unread_referred_message": false,
+    "message_readers_visible_state": "disabled",
+    "channel_id": "sample channel_id 22",
+    "is_group": true,
+    "participant_count": 59,
+    "is_default_channel": true,
+    "is_open": true,
+    "created_at": 1794079200000
+   }
+  ]
+ }
+}

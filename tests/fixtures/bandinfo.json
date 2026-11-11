@@ -1,0 +1,113 @@
+{
+ "result_code": 1,
+ "result_data": {
+  "band": {
+   "type": "group",
+   "band_no": 100001,
+   "name": "sample name 2",
+   "cover": "https://example.invalid/cover",
+   "theme_color": "sample theme_color 3",
+   "member_count": 59,
+   "open_type": "secret",
+   "web_url": "https://example.invalid/web_url",
+   "leader_name": "sample leader_name 4",
+   "since": "sample since 5",
+   "show_popular_post_in_preview": false,
+   "need_ad_agreement": false,
+   "editable_description": true,
+   "updated_at_status": {
+    "post": 1794018000000,
+    "photo": 1794021600000,
+    "schedule": 1794025200000,
+    "file": 1794028800000,
+    "open_chat": 1794032400000,
+    "member": 1794036000000,
+    "announcement": 1794039600000,
+    "notice": 0,
+    "location_sharing": 1794043200000,
+    "page_link": 1794046800000,
+    "ad_agreement": 1794050400000
+   },
+   "media_savable": true,
+   "post_copiable_state": "enabled",
+   "properties": {
+    "contents_quota": {
+     "quota_status": "enabled",
+     "file_quota_policy": "sample file_quota_policy 16"
+    },
+    "is_show_online_member": true,
+    "is_show_online_member_on_posts": false,
+    "is_show_online_member_on_home": false,
+    "is_location_sharing_enabled": false,
+    "mention_method": "sample mention_method 17",
+    "is_bill_split_enabled": false,
+    "is_notice_reader_enabled": true,
+    "is_member_list_enabled": true,
+    "is_member_selectable_for_chat": true,
+    "open_birthday": true,
+    "open_cellphone": true,
+    "is_post_members_birthday_enabled": true,
+    "post_without_approval": true,
+    "is_member_description_required": false
+   },
+   "open_mission": false,
+   "is_secret_comment_enabled": false,
+   "is_video_view_states_enabled": true,
+   "band_for_kids_enabled": false,
+   "email_verification_enabled": false,
+   "email_preregistration_enabled": false,
+   "is_pinned_hashtags_required_on_post": false,
+   "member_group_updated_at": 1794061200000,
+   "is_show_recent_post_enabled": false,
+   "is_mission_confirm_post_compaction_enabled": false,
+   "has_compaction_hashtags": false,
+   "save_chat_history_enabled": false,
+   "member_story_enabled": true,
+   "comment_on_profile_enabled": true,
+   "is_managed_organization": false,
+   "category_id": 73,
+   "category_icon_url": "https://example.invalid/category_icon_url",
+   "category_group_id": 1,
+   "view_type": "normal",
+   "photo_album_count": 0,
+   "photo_count": 1,
+   "chat_enabled": true,
+   "has_pinned_hashtags": false,
+   "show_updated_member_on_home": false,
+   "show_updated_member_on_members": false,
+   "show_updated_member_on_posts": false
+  },
+  "member": {
+   "profiles": [
+    {
+     "member_type": "membership",
+     "name": "sample name 19",
+     "profile_image_url": "https://example.invalid/profile_image_url",
+     "created_at": 1794068400000,
+     "permitted_operation": [
+      "sample permitted_operation 21",
+      "sample permitted_operation 22",
+      "sample permitted_operation 23"
+     ],
+     "push_post_list": [
+      "_ALL_"
+     ],
+     "post_once_a_day": false,
+     "push_yn": true,
+     "is_member": true,
+     "expose_online": true
+    }
+   ],
+   "accessed_at": {
+    "post": 1794082800000,
+    "photo": 1794086400000,
+    "schedule": 1794090000000,
+    "file": 1794093600000,
+    "application": 1794097200000,
+    "post_approval": 1794100800000,
+    "member": 1794104400000,
+    "home": 1794108000000
+   }
+  }
+ }
+}

@@ -91,8 +91,10 @@ function isEnvelope(value: unknown): value is Envelope {
 export class BandClient {
   readonly session: BandSession;
   private readonly fetchImpl: typeof fetch;
-  private readonly now: () => number;
-  private readonly timeZone: string;
+  /** Clock in ms (test seam); tools use it for "today". */
+  readonly now: () => number;
+  /** The user's IANA zone (MCP_USER_TZ, else the system zone); tools use it for "today". */
+  readonly timeZone: string;
   private readonly timeoutMs: number;
 
   constructor(opts: BandClientOptions) {

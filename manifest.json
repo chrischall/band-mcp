@@ -48,7 +48,64 @@
       "required": false
     }
   },
-  "tools": [],
+  "tools": [
+    {
+      "name": "band_healthcheck",
+      "description": "Check the BAND session: whether the browser session is readable, minutes until it expires, and whether BAND's API accepts it."
+    },
+    {
+      "name": "band_whats_new",
+      "description": "Counts of new feed posts, unread chat messages and news across all your bands."
+    },
+    {
+      "name": "band_list_bands",
+      "description": "List the bands (groups) you belong to, with their number, name and member count."
+    },
+    {
+      "name": "band_get_band",
+      "description": "One band's details: type, open/secret, member count, leader, link, chat on/off."
+    },
+    {
+      "name": "band_list_members",
+      "description": "List a band's members with role, online state and join date; optional name filter."
+    },
+    {
+      "name": "band_list_posts",
+      "description": "Read a band's feed — posts and announcements — newest first, with paging."
+    },
+    {
+      "name": "band_get_post",
+      "description": "Read one post in full, with its comments by default."
+    },
+    {
+      "name": "band_list_comments",
+      "description": "List the comments on one post, with paging."
+    },
+    {
+      "name": "band_list_notices",
+      "description": "List a band's notices (posts pinned as important)."
+    },
+    {
+      "name": "band_search_posts",
+      "description": "Search a band's posts by keyword."
+    },
+    {
+      "name": "band_list_events",
+      "description": "List a band's calendar events between two dates (default the next 60 days)."
+    },
+    {
+      "name": "band_get_event",
+      "description": "Read one calendar event."
+    },
+    {
+      "name": "band_list_chats",
+      "description": "List a band's chat channels with unread counts and latest message."
+    },
+    {
+      "name": "band_get_chat",
+      "description": "Read one chat channel: participants, unread state and latest message (no history)."
+    }
+  ],
   "compatibility": {
     "platforms": [
       "darwin",
