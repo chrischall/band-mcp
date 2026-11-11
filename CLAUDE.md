@@ -30,7 +30,13 @@ npm run test:coverage  # 100% thresholds, run by CI
   `src/index.ts` registers it and `tests/manifest-roster.test.ts` drives it. A
   new tool also needs a `manifest.json` `tools` entry and a README row (both
   tested), and `tests/server-boot.test.ts` `MIN_TOOLS` raised.
+- `skills/band/SKILL.md` — the MCP-usage skill (shipped with the plugin).
+  `tests/docs.test.ts` requires it to name exactly the registered tools.
 - `skills/band-fpx/` — the standalone fpx skill; independent of the server.
+- `docs/BAND-API.md` — protocol notes (signing, bootstrap, endpoints). Every
+  `/vX.Y.Z/<endpoint>` literal in `src/` must appear in it (tested).
+- Env vars: a new one goes in `mint.yaml`, `server.json` and the README
+  configuration table (all three tested against `mint.yaml`).
 
 ## Rules specific to this repo
 
