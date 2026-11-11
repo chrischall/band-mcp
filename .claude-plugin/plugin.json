@@ -1,7 +1,7 @@
 {
   "name": "band",
   "displayName": "BAND",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Unofficial BAND (band.us) tools for Claude — bands, posts, comments, events, members and chats via MCP",
   "author": {
     "name": "Chris Chall"
