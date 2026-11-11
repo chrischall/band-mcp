@@ -154,6 +154,25 @@ describe('BandSession', () => {
     await expect(g.session.get()).rejects.toThrow(/signing key.*HTTP 502/);
   });
 
+  it('an unhinted pairing-pending error surfaces the pair code and the approve remedy, not the sign-in hint', async () => {
+    // @fetchproxy/server rejects pending pairs with a FetchproxyProtocolError that has NO .hint.
+    const pending = Object.assign(
+      new Error(
+        'fetchproxy transport error: pairing required for band-mcp. Tell the user to open the ContextMint Bridge ' +
+          'browser extension popup and approve the pair request. The pair code is: 0627-6516 — display this code to the user so they can verify it matches.',
+      ),
+      { name: 'FetchproxyProtocolError' },
+    );
+    for (const opts of [{ cookies: async () => Promise.reject(pending) }, { getKey: async () => Promise.reject(pending) }]) {
+      const { session } = sessionWith(opts);
+      const err = await rejectionOf<BandBridgeError>(session.get());
+      expect(err).toBeInstanceOf(BandBridgeError);
+      expect(err.message).toContain('0627-6516');
+      expect(err.hint).toMatch(/approve pair code 0627-6516/);
+      expect(err.hint).not.toBe(signInHint());
+    }
+  });
+
   it('a failed lift is not cached: the next get() retries', async () => {
     const cookies = vi.fn().mockRejectedValueOnce(new Error('down')).mockResolvedValue({ band_session: bandSessionJwt() });
     const { session } = sessionWith({ cookies });

@@ -51,10 +51,25 @@ export class BandSessionError extends SessionNotAuthenticatedError {
 
 /** Reading through the bridge failed for an unclassified reason. */
 export class BandBridgeError extends McpToolError {
-  constructor(message: string, cause: unknown) {
-    super(message, { hint: signInHint(), cause });
+  constructor(message: string, cause: unknown, hint: string = signInHint()) {
+    super(message, { hint, cause });
     this.name = 'BandBridgeError';
   }
+}
+
+/**
+ * @fetchproxy/server rejects calls while a pairing is pending with a
+ * `FetchproxyProtocolError` that carries NO `.hint` — only the code in its
+ * message. Pull the code out so the user is told to approve it, not to sign in.
+ */
+export function pendingPairCode(err: unknown): string | undefined {
+  const msg = messageOf(err);
+  if (!/pairing required/i.test(msg)) return undefined;
+  return /pair code is:?\s*(\d{4}-\d{4})/i.exec(msg)?.[1];
+}
+
+export function approvePairHint(code: string): string {
+  return `Open the ContextMint Bridge extension popup in the browser signed in to ${WEB_ORIGIN}, approve pair code ${code} for band-mcp, then retry.`;
 }
 
 /**
@@ -145,6 +160,10 @@ export class BandSession {
       return await fn();
     } catch (err) {
       if (isHintedFetchproxyError(err)) throw err;
+      const code = pendingPairCode(err);
+      if (code) {
+        throw new BandBridgeError(`BAND pairing is pending: approve pair code ${code} in ContextMint Bridge.`, err, approvePairHint(code));
+      }
       throw new BandBridgeError(`Could not read ${what} from the browser: ${truncateErrorMessage(messageOf(err), 200)}`, err);
     }
   }
