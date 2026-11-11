@@ -1,0 +1,28 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.chrischall/band-mcp",
+  "description": "Unofficial BAND (band.us) MCP for Claude — bands, posts, comments, events, members and chats",
+  "repository": {
+    "url": "https://github.com/chrischall/band-mcp",
+    "source": "github"
+  },
+  "version": "0.0.0",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "@chrischall/band-mcp",
+      "version": "0.0.0",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "BAND_WS_PORT",
+          "description": "fetchproxy bridge concentrator port. Defaults to the fleet-shared 37149.",
+          "isRequired": false,
+          "format": "string"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "name": "chrischall",
+  "owner": {
+    "name": "Chris Chall",
+    "email": "chris.c.hall@gmail.com"
+  },
+  "metadata": {
+    "description": "BAND (band.us) tools for Claude Code",
+    "version": "0.0.0"
+  },
+  "plugins": [
+    {
+      "name": "band",
+      "displayName": "BAND",
+      "source": "./",
+      "description": "Unofficial BAND (band.us) tools for Claude — bands, posts, comments, events, members and chats via MCP",
+      "version": "0.0.0",
+      "author": {
+        "name": "Chris Chall"
+      },
+      "homepage": "https://github.com/chrischall/band-mcp",
+      "repository": "https://github.com/chrischall/band-mcp",
+      "license": "MIT",
+      "keywords": [
+        "band",
+        "band-us",
+        "groups",
+        "mcp",
+        "calendar"
+      ],
+      "category": "productivity"
+    }
+  ]
+}

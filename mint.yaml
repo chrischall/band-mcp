@@ -1,0 +1,64 @@
+version: 1
+name: BAND
+slug: band
+# Hosting: browser-bridge bootstrap. The fetchproxy bridge lifts the band.us
+# session cookies and fetches the per-session signing key through the user's
+# signed-in https://www.band.us/ tab; every API call is then plain Node fetch
+# to api-us.band.us. So the registration needs runtime `fly-shared`,
+# `bridge: true` and `bridgePortEnv: BAND_WS_PORT` — none of which this
+# manifest can express (they are registration fields, set over the control API).
+summary: >-
+  Read your BAND groups — bands, posts, comments, notices, calendar events,
+  members and chats — and post or comment with confirmation. Signs in through
+  your logged-in band.us browser tab.
+examples:
+  - prompt: What's new in my BAND groups since I last checked?
+    note: Reads unread news counts and the latest posts.
+  - prompt: What events are on my band's calendar for the next month?
+    note: Lists calendar events in a date range.
+  - prompt: Summarize the comments on the latest announcement in my band.
+    note: Read-only; reads the post and its comments.
+env:
+  - name: BAND_WS_PORT
+    required: false
+    help: >-
+      Concentrator port for the fetchproxy bridge (defaults to the fleet-shared
+      37149). The runner injects a per-registration port for a hosted bridged
+      child, so this is the name to give `bridgePortEnv` at registration.
+  - name: MCP_USER_TZ
+    required: false
+    help: >-
+      Your IANA time zone (e.g. America/New_York), sent to BAND as the device
+      time zone and used for default event date ranges. Unset, a hosted server
+      uses the system zone (UTC).
+  - name: BAND_DEBUG
+    required: false
+    help: >-
+      Truthy logs the fetchproxy bridge's role and lifecycle to stderr.
+      Diagnostic only.
+  - name: MCP_CONFIRM_MODE
+    required: false
+    help: >-
+      What a confirmation-gated write does on a client that cannot show a
+      confirmation prompt: ask-user (default; preview + token, the user
+      approves in chat), auto (the model may use the token itself after the
+      preview), or refuse. An unrecognised value is treated as refuse.
+  - name: MCP_CONFIRM_ELICITATION
+    required: false
+    help: >-
+      on (default) confirms writes with an MCP elicitation prompt when the
+      client supports one; off never prompts, so every client takes the
+      MCP_CONFIRM_MODE path (for clients that declare elicitation but never
+      render it).
+state:
+  dataDir: true
+  reason: >-
+    keeps the fetchproxy identity under $HOME/.fetchproxy so the browser
+    pairing survives restarts; without it every cold start asks the user to
+    re-pair
+# The server process dials only the BAND API host. auth.band.us (signing key)
+# and www.band.us (cookies) are reached only by the user's browser over the
+# bridge, never by this process.
+egress:
+  allow:
+    - api-us.band.us

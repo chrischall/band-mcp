@@ -1,0 +1,62 @@
+{
+  "$schema": "https://raw.githubusercontent.com/anthropics/dxt/main/dist/mcpb-manifest.schema.json",
+  "manifest_version": "0.3",
+  "name": "band-mcp",
+  "display_name": "BAND",
+  "version": "0.0.0",
+  "description": "Unofficial BAND (band.us) tools for Claude — bands, posts, comments, events, members and chats via your signed-in browser",
+  "author": {
+    "name": "Chris Chall",
+    "email": "chris.c.hall@gmail.com",
+    "url": "https://github.com/chrischall"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chrischall/band-mcp"
+  },
+  "homepage": "https://github.com/chrischall/band-mcp",
+  "support": "https://github.com/chrischall/band-mcp/issues",
+  "license": "MIT",
+  "keywords": [
+    "band",
+    "band-us",
+    "groups",
+    "community",
+    "posts",
+    "calendar",
+    "events",
+    "chat"
+  ],
+  "server": {
+    "type": "node",
+    "entry_point": "dist/bundle.js",
+    "mcp_config": {
+      "command": "node",
+      "args": [
+        "${__dirname}/dist/bundle.js"
+      ],
+      "env": {
+        "BAND_WS_PORT": "${user_config.band_ws_port}"
+      }
+    }
+  },
+  "user_config": {
+    "band_ws_port": {
+      "type": "number",
+      "title": "Bridge port",
+      "description": "The fetchproxy bridge port. The whole fetchproxy fleet and ContextMint Bridge share `37149`; override only for local testing (or when a host injects a per-registration port). Defaults to 37149.",
+      "required": false
+    }
+  },
+  "tools": [],
+  "compatibility": {
+    "platforms": [
+      "darwin",
+      "win32",
+      "linux"
+    ],
+    "runtimes": {
+      "node": ">=22.5.0"
+    }
+  }
+}
