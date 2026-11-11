@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { parseToolResult, type TestHarness } from '@chrischall/mcp-utils/test';
 import { createHmac } from 'node:crypto';
 import { excerpt, registerWriteTools } from '../src/tools/writes.js';
-import { NOW_MS, SECRET, fixture, ok, textOf, toolHarness, untrustedPayload, type SentRequest } from './helpers.js';
+import { NOW_MS, SECRET, bandSessionJwt, fixture, ok, textOf, toolHarness, untrustedPayload, type SentRequest } from './helpers.js';
 
 // Placeholder bands, posts and text only — never a real band, member or id.
 
@@ -135,6 +135,23 @@ describe('band_create_post', () => {
     const result = await t.harness.callTool('band_create_post', { band_no: 100001, content: '   ' });
     expect(result.isError).toBe(true);
     expect(t.sent).toEqual([]);
+  });
+});
+
+describe('account binding', () => {
+  it('a token previewed as one BAND account is refused once the browser is signed in as another', async () => {
+    let userNo = 1;
+    const t = await toolHarness(registerWriteTools, [fixture('bandinfo'), fixture('bandinfo')], {
+      cookies: async () => ({ band_session: bandSessionJwt(86_400, { userNo }) }),
+    });
+    harness = t.harness;
+    const args = { band_no: 100001, content: 'hello' };
+    const first = parseToolResult<Preview>(await t.harness.callTool('band_create_post', args));
+    userNo = 2;
+    t.client.session.invalidate(t.client.session.peek()!);
+    const second = await t.harness.callTool('band_create_post', { ...args, confirmToken: first.confirmToken });
+    expect(t.sent.filter(isPost)).toEqual([]);
+    expect(textOf(second)).toMatch(/DRAFT_CHANGED|changed|account/i);
   });
 });
 

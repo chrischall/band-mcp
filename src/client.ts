@@ -27,6 +27,7 @@ export const AKEY = 'bbc59b0b5f7a1c6efe950f6236ccda35';
 
 const SERVICE = 'BAND';
 const DEFAULT_TIMEOUT_MS = 30_000;
+const WRITE_RECHECK_HINT = 'Re-read the post or its comments to check whether it landed before retrying.';
 const RENEW_HINT = `Open ${WEB_ORIGIN} in the browser running ContextMint Bridge so it renews the session, then retry.`;
 
 /** A form value for a POST body. */
@@ -133,12 +134,20 @@ export class BandClient {
   }
 
   private async call<T>(method: 'GET' | 'POST', endpoint: string, params: QueryParams, body: string | undefined): Promise<T> {
-    let envelope = await this.send(method, endpoint, params, body, await this.session.get());
+    const before = this.session.generation;
+    let session = await this.session.get();
+    let envelope = await this.send(method, endpoint, params, body, session);
     if (envelope.result_code === 300) {
-      this.session.invalidate();
-      envelope = await this.send(method, endpoint, params, body, await this.session.get());
+      // 300 = BAND refused the call (nothing was applied), so one retry is safe —
+      // but only on a session that predates this call. One lifted for THIS call
+      // was just read from the browser; reading it again would get the same.
+      this.session.invalidate(session);
+      if (this.session.generation === before) {
+        session = await this.session.get();
+        envelope = await this.send(method, endpoint, params, body, session);
+        if (envelope.result_code === 300) this.session.invalidate(session);
+      }
       if (envelope.result_code === 300) {
-        this.session.invalidate();
         throw new BandSessionError('BAND rejected the session (result_code 300) even after re-reading it from the browser', RENEW_HINT);
       }
     }
@@ -195,7 +204,7 @@ export class BandClient {
         throw new WriteOutcomeUnknownError(SERVICE, method, {
           cause: err,
           ...(isTimeoutError(err) ? { timeoutMs: this.timeoutMs } : {}),
-          hint: 'Re-read the post or its comments to check whether it landed before retrying.',
+          hint: WRITE_RECHECK_HINT,
         });
       }
       throw new McpToolError(`Could not reach BAND: ${truncateErrorMessage(messageOf(err), 200)}`, {
@@ -211,7 +220,14 @@ export class BandClient {
       parsed = undefined;
     }
     if (!isEnvelope(parsed)) {
-      throw new McpToolError(`BAND API ${endpoint} gave an unexpected answer (HTTP ${res.status}).`, { status: res.status, kind: 'http' });
+      // A POST may have been applied before whatever answered (a proxy, an outage
+      // page) replaced BAND's envelope — never report it as a clean failure.
+      const unexpected = new McpToolError(`BAND API ${endpoint} gave an unexpected answer (HTTP ${res.status}).`, {
+        status: res.status,
+        kind: 'http',
+      });
+      if (method === 'POST') throw new WriteOutcomeUnknownError(SERVICE, method, { cause: unexpected, hint: WRITE_RECHECK_HINT });
+      throw unexpected;
     }
     return parsed;
   }

@@ -34,6 +34,8 @@ export interface BandSessionInfo {
   clockSkewMs: number;
   /** band_session `exp`, epoch seconds, when readable. */
   exp?: number;
+  /** band_session `userNo`: the signed-in BAND account (binds confirm-gated writes). */
+  userNo?: number;
 }
 
 export function signInHint(): string {
@@ -103,6 +105,11 @@ export function parseGetKey(body: string): ParsedGetKey {
   };
 }
 
+function numberClaim(jwt: string, claim: string): number | undefined {
+  const v = decodeJwtClaim(jwt, claim);
+  return typeof v === 'number' ? v : undefined;
+}
+
 export interface BandSessionOptions {
   /** Lift the band.us session cookies (one bridge call). */
   readCookies: () => Promise<SessionCookies>;
@@ -150,9 +157,13 @@ export class BandSession {
     return this.history;
   }
 
-  /** Drop the cached session (BAND rejected it); the next get() re-lifts. */
-  invalidate(): void {
-    this.cached = undefined;
+  /**
+   * Drop `info` (BAND rejected it); the next get() re-lifts. A no-op when `info`
+   * is no longer the cached session — a concurrent caller already re-lifted, and
+   * dropping its fresh session would only force a second, pointless lift.
+   */
+  invalidate(info: BandSessionInfo): void {
+    if (this.cached === info) this.cached = undefined;
   }
 
   private async bridged<T>(what: string, fn: () => Promise<T>): Promise<T> {
@@ -174,8 +185,8 @@ export class BandSession {
     const jwt = cookies['band_session'];
     if (!jwt) throw new BandSessionError(`no BAND session cookie was found for ${WEB_ORIGIN}`);
 
-    const expClaim = decodeJwtClaim(jwt, 'exp');
-    const exp = typeof expClaim === 'number' ? expClaim : undefined;
+    const exp = numberClaim(jwt, 'exp');
+    const userNo = numberClaim(jwt, 'userNo');
     if (exp !== undefined && exp <= this.now() / 1000) {
       throw new BandSessionError('the BAND session in the browser has expired');
     }
@@ -193,6 +204,7 @@ export class BandSession {
       isJwt: parsed.isJwt,
       clockSkewMs: parsed.timeCorrection !== undefined ? parsed.timeCorrection - this.now() : 0,
       ...(exp !== undefined ? { exp } : {}),
+      ...(userNo !== undefined ? { userNo } : {}),
     };
     this.cached = info;
     this.lifts++;

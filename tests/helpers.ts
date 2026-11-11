@@ -21,7 +21,8 @@ export function fakeJwt(claims: Record<string, unknown>): string {
 }
 
 /** A band_session JWT expiring `secondsLeft` after NOW. */
-export const bandSessionJwt = (secondsLeft = 2 * 86_400) => fakeJwt({ exp: NOW + secondsLeft, iat: NOW - 3600 });
+export const bandSessionJwt = (secondsLeft = 2 * 86_400, claims: Record<string, unknown> = {}) =>
+  fakeJwt({ exp: NOW + secondsLeft, iat: NOW - 3600, ...claims });
 
 /** A getKey JSONP body shaped like BAND's (values made up). */
 export function getKeyBody(opts: { t?: number; secretKey?: string; isJwt?: boolean; timeCorrection?: number | null; state?: string } = {}): string {
@@ -70,14 +71,14 @@ export interface SentRequest {
 export async function toolHarness(
   register: (server: McpServer, client: BandClient) => void,
   script: unknown[],
-  opts: { env?: Record<string, string | undefined>; now?: number } = {},
+  opts: { env?: Record<string, string | undefined>; now?: number; cookies?: () => Promise<Record<string, string>> } = {},
 ): Promise<{ harness: TestHarness; sent: SentRequest[]; client: BandClient; jwt: string }> {
   const jwt = bandSessionJwt();
   const queue = [...script];
   const sent: SentRequest[] = [];
   const client = new BandClient({
-    readCookies: async () => ({ band_session: jwt, di: 'device-cookie-value' }),
-    fetchGetKey: async (t) => getKeyBody({ t, timeCorrection: (opts.now ?? NOW_MS) }),
+    readCookies: opts.cookies ?? (async () => ({ band_session: jwt, di: 'device-cookie-value' })),
+    fetchGetKey: async (t) => getKeyBody({ t, timeCorrection: opts.now ?? NOW_MS }),
     now: () => opts.now ?? NOW_MS,
     env: opts.env ?? { MCP_USER_TZ: 'America/New_York' },
     fetchImpl: (async (url: string, init: RequestInit) => {

@@ -5,6 +5,7 @@ import { z } from 'zod';
 import type { McpServer } from '@modelcontextprotocol/server';
 import { UNTRUSTED_DESCRIPTION_SUFFIX, toolAnnotations } from '@chrischall/mcp-utils';
 import type { BandClient } from '../client.js';
+import { ENDPOINTS } from '../endpoints.js';
 import { LOOKUP, familyMeta } from './hints.js';
 import {
   attachmentCounts,
@@ -12,21 +13,15 @@ import {
   bandNoParam,
   bandView,
   cursorParam,
-  decodeCursor,
   nextCursorOf,
+  pagingParams,
   postNoParam,
   prune,
   respond,
   stripMarkup,
+  type Paged,
+  type Rec,
 } from './shared.js';
-
-type Rec = Record<string, unknown>;
-
-interface Paged {
-  items?: Rec[] | null;
-  paging?: { next_params?: Rec | null } | null;
-  [key: string]: unknown;
-}
 
 /** One post, compact: markup stripped, author by name, attachment counts. */
 export function compactPost(p: Rec): Rec {
@@ -89,8 +84,8 @@ export function registerPostTools(server: McpServer, client: BandClient): void {
       }),
     },
     async ({ band_no, include_announcements, cursor, view }) => {
-      const paging = cursor ? decodeCursor(cursor) : {};
-      const data = await client.get<Paged>('/v2.0.0/get_posts_and_announcements', { band_no, resolution_type: 4, ...paging });
+      const paging = pagingParams(cursor);
+      const data = await client.get<Paged>(ENDPOINTS.FEED, { band_no, resolution_type: 4, ...paging });
       const items = (data.items ?? []).filter((i) => include_announcements || i.type !== 'announcement');
       return respond(
         view,
@@ -117,9 +112,9 @@ export function registerPostTools(server: McpServer, client: BandClient): void {
       }),
     },
     async ({ band_no, post_no, include_comments, view }) => {
-      const data = await client.get<{ post?: Rec }>('/v2.0.0/get_post', { band_no, post_no });
+      const data = await client.get<{ post?: Rec }>(ENDPOINTS.POST, { band_no, post_no });
       const comments = include_comments
-        ? await client.get<Paged & { total?: number }>('/v2.3.0/get_comments', { band_no, content_key: contentKey(post_no) })
+        ? await client.get<Paged & { total?: number }>(ENDPOINTS.COMMENTS, { band_no, content_key: contentKey(post_no) })
         : undefined;
       return respond(
         view,
@@ -152,8 +147,8 @@ export function registerPostTools(server: McpServer, client: BandClient): void {
       }),
     },
     async ({ band_no, post_no, cursor, view }) => {
-      const paging = cursor ? decodeCursor(cursor) : {};
-      const data = await client.get<Paged & { total?: number }>('/v2.3.0/get_comments', {
+      const paging = pagingParams(cursor);
+      const data = await client.get<Paged & { total?: number }>(ENDPOINTS.COMMENTS, {
         band_no,
         content_key: contentKey(post_no),
         ...paging,
@@ -181,7 +176,7 @@ export function registerPostTools(server: McpServer, client: BandClient): void {
       }),
     },
     async ({ band_no, limit, view }) => {
-      const data = await client.get<Paged>('/v2.0.0/get_band_notices', { band_no, limit });
+      const data = await client.get<Paged>(ENDPOINTS.NOTICES, { band_no, limit });
       return respond(view, data, (d) => ({ notices: (d.items ?? []).map(postOf) }), 'get_band_notices');
     },
   );
@@ -203,8 +198,8 @@ export function registerPostTools(server: McpServer, client: BandClient): void {
       }),
     },
     async ({ band_no, query, cursor, view }) => {
-      const paging = cursor ? decodeCursor(cursor) : {};
-      const data = await client.get<Paged & { post_total?: number; comment_total?: number }>('/v2.0.0/search_posts', {
+      const paging = pagingParams(cursor);
+      const data = await client.get<Paged & { post_total?: number; comment_total?: number }>(ENDPOINTS.SEARCH_POSTS, {
         band_no,
         query,
         ...paging,

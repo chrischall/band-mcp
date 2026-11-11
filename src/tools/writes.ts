@@ -1,7 +1,8 @@
 // The only two writes: a new post and a comment on a post. Both are
 // confirm-gated (mcp-utils `confirmWrite`): the first call reads the band's
 // name and answers a preview + confirmToken that binds the exact form body, the
-// second (with the token) POSTs it. RSVP and every other write are out of scope.
+// second (with the token) POSTs it. The token also binds the signed-in account.
+// RSVP and every other write are out of scope.
 //
 // The form bodies are the band.us web app's own, field for field and in order.
 
@@ -16,22 +17,29 @@ import {
   untrustedResult,
 } from '@chrischall/mcp-utils';
 import type { BandClient, FormValue } from '../client.js';
+import { ENDPOINTS } from '../endpoints.js';
 import { familyMeta } from './hints.js';
-import { bandNoParam, postNoParam, prune } from './shared.js';
+import { bandNoParam, postNoParam, prune, type Rec } from './shared.js';
 
-type Rec = Record<string, unknown>;
-
-export const CREATE_POST_ENDPOINT = '/v2.0.2/create_post';
-export const CREATE_COMMENT_ENDPOINT = '/v2.3.0/create_comment';
 
 const GATE = `${CONFIRM_FLOW_SENTENCE} ${CONFIRM_INJECTION_RULE}`;
 const EXCERPT_CHARS = 200;
 
 /** The band's display name, for the preview ("band <no>" when BAND sends none). */
 async function bandName(client: BandClient, band_no: number): Promise<string> {
-  const data = await client.get<{ band?: { name?: unknown } | null }>('/v2.3.0/get_band_information', { band_no });
+  const data = await client.get<{ band?: { name?: unknown } | null }>(ENDPOINTS.BAND_INFO, { band_no });
   const name = data?.band?.name;
   return typeof name === 'string' && name.trim() ? name : `band ${band_no}`;
+}
+
+/**
+ * The signed-in BAND account the write would run as (band_session's `userNo`),
+ * bound into the confirm token so a preview approved as one account never posts
+ * as another. Read after bandName(), which has already lifted the session.
+ */
+async function accountOf(client: BandClient): Promise<string | undefined> {
+  const { userNo } = await client.session.get();
+  return userNo !== undefined ? `user ${userNo}` : undefined;
 }
 
 /** The first EXCERPT_CHARS characters of `text`, with an ellipsis when cut. */
@@ -101,20 +109,21 @@ export function registerWriteTools(server: McpServer, client: BandClient): void 
     },
     async ({ band_no, content, confirmToken }, ctx) => {
       const band = await bandName(client, band_no);
+      const account = await accountOf(client);
       const form = postForm(band_no, content);
       const gate = await confirmWrite(ctx, {
         tool: 'band_create_post',
         action: 'band.post.create',
         summary: `Post to the band "${band}" (visible to all its members)`,
-        account: undefined,
+        account,
         target: band_no,
-        request: { method: 'POST', path: CREATE_POST_ENDPOINT, body: form },
+        request: { method: 'POST', path: ENDPOINTS.CREATE_POST, body: form },
         willSend: { band, content: excerpt(content) },
         confirmToken,
       });
       if (gate) return gate;
 
-      const data = await client.post<unknown>(CREATE_POST_ENDPOINT, form);
+      const data = await client.post<unknown>(ENDPOINTS.CREATE_POST, form);
       return untrustedResult(prune({ created: true, band_no, band, post_no: idOf(data, 'post', 'post_no') }));
     },
   );
@@ -137,20 +146,21 @@ export function registerWriteTools(server: McpServer, client: BandClient): void 
     },
     async ({ band_no, post_no, body, confirmToken }, ctx) => {
       const band = await bandName(client, band_no);
+      const account = await accountOf(client);
       const form = commentForm(band_no, post_no, body);
       const gate = await confirmWrite(ctx, {
         tool: 'band_create_comment',
         action: 'band.comment.create',
         summary: `Comment on post ${post_no} in the band "${band}"`,
-        account: undefined,
+        account,
         target: `${band_no}/${post_no}`,
-        request: { method: 'POST', path: CREATE_COMMENT_ENDPOINT, body: form },
+        request: { method: 'POST', path: ENDPOINTS.CREATE_COMMENT, body: form },
         willSend: { band, post_no, body: excerpt(body) },
         confirmToken,
       });
       if (gate) return gate;
 
-      const data = await client.post<unknown>(CREATE_COMMENT_ENDPOINT, form);
+      const data = await client.post<unknown>(ENDPOINTS.CREATE_COMMENT, form);
       return untrustedResult(
         prune({ commented: true, band_no, band, post_no, comment_id: idOf(data, 'comment', 'comment_id') }),
       );

@@ -5,10 +5,9 @@ import { z } from 'zod';
 import type { McpServer } from '@modelcontextprotocol/server';
 import { UNTRUSTED_DESCRIPTION_SUFFIX, toolAnnotations } from '@chrischall/mcp-utils';
 import type { BandClient } from '../client.js';
+import { ENDPOINTS } from '../endpoints.js';
 import { LOOKUP } from './hints.js';
-import { authorName, bandNoParam, bandView, prune, respond, stripMarkup } from './shared.js';
-
-type Rec = Record<string, unknown>;
+import { authorName, bandNoParam, bandView, prune, respond, stripMarkup, type Rec } from './shared.js';
 
 const NO_HISTORY = 'Chat message history is not available through this API — only the latest message.';
 
@@ -49,7 +48,7 @@ export function registerChatTools(server: McpServer, client: BandClient): void {
       }),
     },
     async ({ band_no, view }) => {
-      const data = await client.get<{ channels?: Rec[] }>('/v2.0.0/get_chat_channels', { band_no });
+      const data = await client.get<{ channels?: Rec[] }>(ENDPOINTS.CHAT_CHANNELS, { band_no });
       return respond(view, { channels: data.channels ?? [] }, (d) => ({ channels: d.channels.map(compactChannel) }), 'get_chat_channels');
     },
   );
@@ -68,7 +67,7 @@ export function registerChatTools(server: McpServer, client: BandClient): void {
       }),
     },
     async ({ channel_id, view }) => {
-      const data = await client.get<{ channel?: Rec }>('/v2.0.3/sync_chat_channel', { channel_id, resolution_type: 4 });
+      const data = await client.get<{ channel?: Rec }>(ENDPOINTS.CHAT_SYNC, { channel_id, resolution_type: 4 });
       return respond(
         view,
         data,

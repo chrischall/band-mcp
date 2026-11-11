@@ -4,10 +4,9 @@ import { z } from 'zod';
 import type { McpServer } from '@modelcontextprotocol/server';
 import { McpToolError, UNTRUSTED_DESCRIPTION_SUFFIX, toolAnnotations } from '@chrischall/mcp-utils';
 import type { BandClient } from '../client.js';
+import { ENDPOINTS } from '../endpoints.js';
 import { LOOKUP, familyMeta } from './hints.js';
-import { authorName, bandNoParam, bandView, localDate, prune, respond, shiftDate } from './shared.js';
-
-type Rec = Record<string, unknown>;
+import { authorName, bandNoParam, bandView, localDate, prune, respond, shiftDate, type Rec } from './shared.js';
 
 /** The default window: today … today + DEFAULT_DAYS. */
 export const DEFAULT_DAYS = 60;
@@ -60,7 +59,7 @@ export function registerEventTools(server: McpServer, client: BandClient): void 
       if (end < start) {
         throw new McpToolError(`The range ends (${end}) before it starts (${start}).`, { hint: 'Pass to on or after from.' });
       }
-      const data = await client.get<{ items?: Rec[] | null }>('/v1.6.0/get_schedules', {
+      const data = await client.get<{ items?: Rec[] | null }>(ENDPOINTS.SCHEDULES, {
         band_no,
         start_at: ymd(start),
         future_end_at: ymd(end),
@@ -88,7 +87,7 @@ export function registerEventTools(server: McpServer, client: BandClient): void 
       }),
     },
     async ({ band_no, schedule_id, view }) => {
-      const data = await client.get<Rec>('/v1.6.0/get_schedule', { band_no, schedule_id });
+      const data = await client.get<Rec>(ENDPOINTS.SCHEDULE, { band_no, schedule_id });
       return respond(view, data, compactEvent, 'get_schedule');
     },
   );

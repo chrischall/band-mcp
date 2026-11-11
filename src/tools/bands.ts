@@ -4,6 +4,7 @@ import { z } from 'zod';
 import type { McpServer } from '@modelcontextprotocol/server';
 import { UNTRUSTED_DESCRIPTION_SUFFIX, toolAnnotations } from '@chrischall/mcp-utils';
 import type { BandClient } from '../client.js';
+import { ENDPOINTS } from '../endpoints.js';
 import { LOOKUP, familyMeta } from './hints.js';
 import { bandNoParam, bandView, prune, respond } from './shared.js';
 
@@ -39,7 +40,7 @@ export function registerBandTools(server: McpServer, client: BandClient): void {
       inputSchema: z.object({ view: bandView('compact keeps band_no, name and member_count; full adds the cover image.') }),
     },
     async ({ view }) => {
-      const data = await client.get<Array<{ band?: BandRecord }> | null>('/v2.1.0/get_band_list_with_filter', {
+      const data = await client.get<Array<{ band?: BandRecord }> | null>(ENDPOINTS.BAND_LIST, {
         fields: BAND_LIST_FIELDS,
         include_restricted: false,
       });
@@ -70,7 +71,7 @@ export function registerBandTools(server: McpServer, client: BandClient): void {
       }),
     },
     async ({ band_no, view }) => {
-      const data = await client.get<{ band?: BandRecord }>('/v2.3.0/get_band_information', { band_no });
+      const data = await client.get<{ band?: BandRecord }>(ENDPOINTS.BAND_INFO, { band_no });
       return respond(
         view,
         data.band ?? {},
@@ -107,7 +108,7 @@ export function registerBandTools(server: McpServer, client: BandClient): void {
       }),
     },
     async ({ band_no, name, view }) => {
-      const data = await client.get<{ member_count?: number; members?: Member[] }>('/v2.0.0/get_members_of_band', { band_no });
+      const data = await client.get<{ member_count?: number; members?: Member[] }>(ENDPOINTS.MEMBERS, { band_no });
       const needle = name?.toLowerCase();
       const members = (data.members ?? []).filter((m) => !needle || String(m.name ?? '').toLowerCase().includes(needle));
       return respond(
