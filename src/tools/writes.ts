@@ -81,7 +81,7 @@ const textParam = (what: string) =>
     .trim()
     .min(1)
     .max(10_000)
-    .describe(`The ${what} text, as plain text (sent exactly as given; line breaks are kept).`);
+    .describe(`The ${what} text, as plain text (leading and trailing whitespace is trimmed; inner line breaks are kept).`);
 
 export function registerWriteTools(server: McpServer, client: BandClient): void {
   server.registerTool(
