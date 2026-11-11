@@ -1,0 +1,39 @@
+{
+ "result_code": 1,
+ "result_data": {
+  "description": "sample description 1",
+  "name": "sample name 2",
+  "has_more_linked_posts": false,
+  "is_updated": false,
+  "comment_count": 0,
+  "subscribed_calendar": {
+   "name": "sample name 3",
+   "type": "holiday",
+   "id": "sample id 4"
+  },
+  "update_notification_available": false,
+  "is_new": false,
+  "is_lunar": false,
+  "band_no": 100005,
+  "start_at": "sample start_at 6",
+  "end_at": "sample end_at 7",
+  "is_delete": false,
+  "schedule_type": "subscribed_calendar",
+  "schedule_id": "sample schedule_id 8",
+  "is_all_day": true,
+  "secret_sharers": [],
+  "band": {
+   "type": "group",
+   "band_no": 100009,
+   "name": "sample name 10",
+   "cover": "https://example.invalid/cover",
+   "theme_color": "sample theme_color 11",
+   "available_actions": [
+    "sample available_actions 12"
+   ],
+   "permissions": [
+    "sample permissions 13"
+   ]
+  }
+ }
+}

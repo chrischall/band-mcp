@@ -1,0 +1,151 @@
+{
+ "result_code": 1,
+ "result_data": {
+  "paging": {
+   "previous_params": null,
+   "next_params": null,
+   "first_params": {
+    "resolution_type": "4",
+    "limit": "sample limit 1",
+    "band_no": "sample band_no 2"
+   },
+   "last_params": null
+  },
+  "items": [
+   {
+    "announcement": {
+     "band": {
+      "type": "group",
+      "is_recruiting": false,
+      "band_no": 100003,
+      "name": "sample name 4",
+      "cover": "https://example.invalid/cover",
+      "theme_color": "sample theme_color 5",
+      "available_actions": [
+       "sample available_actions 6"
+      ],
+      "permissions": [
+       "sample permissions 7"
+      ]
+     },
+     "announcement_id": 5,
+     "app_id": 2,
+     "fallback_message": "sample fallback_message 8",
+     "app_payload": "sample app_payload 9",
+     "app_payload_version": "sample app_payload_version 10",
+     "emotion_count": 0,
+     "comment_count": 0,
+     "is_emotion_supported": true,
+     "is_comment_supported": true,
+     "created_at": 1794036000000,
+     "content_lineage": "sample content_lineage 12"
+    },
+    "type": "announcement"
+   },
+   {
+    "post": {
+     "attachment": {
+      "video": [],
+      "photo": [],
+      "file": [
+       {
+        "title": "sample title 13",
+        "expires_at": 1794046800000,
+        "created_at": 1794050400000,
+        "is_restricted": false,
+        "origin": "sample origin 16",
+        "id": 100017,
+        "file_size": 100018,
+        "extension": "sample extension 19"
+       }
+      ],
+      "dropbox_file": [],
+      "external_file": []
+     },
+     "featured_comment": [],
+     "content": "sample content 20",
+     "is_translatable": true,
+     "video_count": 0,
+     "is_major_notice": false,
+     "photo_count": 0,
+     "band": {
+      "type": "group",
+      "is_recruiting": false,
+      "band_no": 100021,
+      "name": "sample name 22",
+      "cover": "https://example.invalid/cover",
+      "theme_color": "sample theme_color 23",
+      "available_actions": [
+       "sample available_actions 24"
+      ],
+      "permissions": [
+       "sample permissions 25"
+      ]
+     },
+     "content_lineage": "sample content_lineage 26",
+     "post_no": 5,
+     "comment_count": 0,
+     "emotion_count": 2,
+     "created_at": 1794093600000,
+     "common_emotion_type": [
+      "like"
+     ],
+     "author": {
+      "user_no": 100028,
+      "band_no": 100029,
+      "name": "sample name 30",
+      "profile_image_url": "https://example.invalid/profile_image_url",
+      "description": "sample description 31",
+      "role": "leader",
+      "member_type": "membership",
+      "member_certified": false,
+      "me": false,
+      "member_key": "sample member_key 32",
+      "is_muted": false,
+      "profile_key": "sample profile_key 33",
+      "created_at": 1794118800000
+     },
+     "is_restricted": false,
+     "written_in": "en",
+     "shared_count": 0,
+     "is_bookmarked": false,
+     "should_disable_comment": false,
+     "read_count": 27,
+     "copiable_state": "unassigned",
+     "web_url": "https://example.invalid/web_url"
+    },
+    "type": "post"
+   },
+   {
+    "announcement": {
+     "band": {
+      "type": "group",
+      "is_recruiting": false,
+      "band_no": 100035,
+      "name": "sample name 36",
+      "cover": "https://example.invalid/cover",
+      "theme_color": "sample theme_color 37",
+      "available_actions": [
+       "sample available_actions 38"
+      ],
+      "permissions": [
+       "sample permissions 39"
+      ]
+     },
+     "announcement_id": 4,
+     "app_id": 2,
+     "fallback_message": "sample fallback_message 40",
+     "app_payload": "sample app_payload 41",
+     "app_payload_version": "sample app_payload_version 42",
+     "emotion_count": 0,
+     "comment_count": 0,
+     "is_emotion_supported": true,
+     "is_comment_supported": true,
+     "created_at": 1794151200000,
+     "content_lineage": "sample content_lineage 44"
+    },
+    "type": "announcement"
+   }
+  ]
+ }
+}

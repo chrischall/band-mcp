@@ -1,0 +1,12 @@
+{
+ "result_code": 1,
+ "result_data": {
+  "comment_total": 0,
+  "paging": {
+   "previous_params": null,
+   "next_params": null
+  },
+  "items": null,
+  "post_total": 0
+ }
+}

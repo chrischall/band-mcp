@@ -1,0 +1,17 @@
+{
+ "result_code": 1,
+ "result_data": [
+  {
+   "band": {
+    "band_no": 100001,
+    "name": "sample name 2"
+   }
+  },
+  {
+   "band": {
+    "band_no": 100003,
+    "name": "sample name 4"
+   }
+  }
+ ]
+}

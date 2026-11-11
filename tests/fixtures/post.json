@@ -1,0 +1,74 @@
+{
+ "result_code": 1,
+ "result_data": {
+  "post": {
+   "attachment": {
+    "video": {},
+    "photo": {},
+    "dropbox_file": {},
+    "external_file": {},
+    "file": {
+     "100099": {
+      "title": "sample title 1",
+      "created_at": 1794003600000,
+      "is_restricted": false,
+      "origin": "sample origin 3",
+      "id": 100004,
+      "file_size": 100005,
+      "extension": "sample extension 6"
+     }
+    }
+   },
+   "member_read_count": 0,
+   "content": "sample content 7",
+   "is_translatable": true,
+   "video_count": 0,
+   "is_major_notice": false,
+   "photo_count": 0,
+   "band": {
+    "type": "group",
+    "is_recruiting": false,
+    "band_no": 100008,
+    "name": "sample name 9",
+    "cover": "https://example.invalid/cover",
+    "theme_color": "sample theme_color 10",
+    "available_actions": [
+     "sample available_actions 11"
+    ],
+    "permissions": [
+     "sample permissions 12"
+    ]
+   },
+   "created_at": 1794043200000,
+   "post_no": 5,
+   "comment_count": 0,
+   "emotion_count": 2,
+   "common_emotion_type": [
+    "like"
+   ],
+   "author": {
+    "user_no": 100014,
+    "band_no": 100015,
+    "name": "sample name 16",
+    "profile_image_url": "https://example.invalid/profile_image_url",
+    "description": "sample description 17",
+    "role": "leader",
+    "member_type": "membership",
+    "member_certified": false,
+    "me": false,
+    "member_key": "sample member_key 18",
+    "is_muted": false,
+    "profile_key": "sample profile_key 19",
+    "created_at": 1794068400000
+   },
+   "is_restricted": false,
+   "written_in": "en",
+   "shared_count": 0,
+   "is_bookmarked": false,
+   "should_disable_comment": false,
+   "read_count": 27,
+   "copiable_state": "unassigned",
+   "web_url": "https://example.invalid/web_url"
+  }
+ }
+}

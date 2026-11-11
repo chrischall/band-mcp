@@ -9,6 +9,7 @@
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { createTestHarness } from '@chrischall/mcp-utils/test';
+import { BandClient } from '../src/client.js';
 import { TOOL_REGISTRARS } from '../src/tools/index.js';
 
 const read = (p: string) => readFileSync(new URL(`../${p}`, import.meta.url), 'utf8');
@@ -16,9 +17,16 @@ const manifest = JSON.parse(read('manifest.json')) as {
   tools: { name: string; description: string }[];
 } & Record<string, unknown>;
 
+// Registration only: a client whose bridge seams refuse, so nothing can reach the network.
+const offlineClient = new BandClient({
+  readCookies: () => Promise.reject(new Error('offline')),
+  fetchGetKey: () => Promise.reject(new Error('offline')),
+  fetchImpl: () => Promise.reject(new Error('offline')),
+});
+
 async function registeredTools(): Promise<{ name: string; description?: string }[]> {
   const harness = await createTestHarness((server) => {
-    for (const register of TOOL_REGISTRARS) register(server, {});
+    for (const register of TOOL_REGISTRARS) register(server, offlineClient);
   });
   try {
     return await harness.listTools();

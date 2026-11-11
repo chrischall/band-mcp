@@ -18,6 +18,10 @@ examples:
     note: Lists calendar events in a date range.
   - prompt: Summarize the comments on the latest announcement in my band.
     note: Read-only; reads the post and its comments.
+  - prompt: Post a reminder to my band that practice moves to 6pm on Thursday.
+    note: Writes a post; shows a preview and waits for your confirmation.
+  - prompt: Comment on the latest band post that I can bring snacks.
+    note: Writes a comment; shows a preview and waits for your confirmation.
 env:
   - name: BAND_WS_PORT
     required: false

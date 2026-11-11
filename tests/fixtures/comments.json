@@ -1,0 +1,72 @@
+{
+ "result_code": 1,
+ "result_data": {
+  "items": [
+   {
+    "body": "sample body 1",
+    "is_translatable": true,
+    "content_type": "post_comment",
+    "is_secret": false,
+    "comment_id": 1,
+    "comment_count": 0,
+    "author": {
+     "user_no": 100002,
+     "band_no": 100003,
+     "name": "sample name 4",
+     "profile_image_url": "https://example.invalid/profile_image_url",
+     "description": "sample description 5",
+     "role": "member",
+     "member_type": "membership",
+     "member_certified": false,
+     "me": false,
+     "member_key": "sample member_key 6",
+     "is_muted": false,
+     "profile_key": "sample profile_key 7",
+     "created_at": 1794025200000
+    },
+    "is_ai_generated": false,
+    "written_in": "en",
+    "created_at": 1794028800000,
+    "post_no": 1,
+    "emotion_count": 3,
+    "photos": [
+     {
+      "url": "https://example.invalid/url",
+      "width": 1024,
+      "height": 1024,
+      "thumbnail_type": "s75"
+     }
+    ],
+    "common_emotion_type": [
+     "great",
+     "funny"
+    ],
+    "post_comment_id": 1,
+    "is_restricted": false,
+    "audio_duration": -1,
+    "is_liked_by_viewer": false
+   }
+  ],
+  "paging": {
+   "previous_params": null,
+   "next_params": null,
+   "first_params": {
+    "paging_default": "sample paging_default 10",
+    "params_for_first": "sample params_for_first 11",
+    "limit": "sample limit 12",
+    "update_param": "sample update_param 13",
+    "content_key": "sample content_key 14",
+    "band_no": "sample band_no 15",
+    "is_last_paging_value_for_included": "sample is_last_paging_value_for_included 16",
+    "last_paging_value": "sample last_paging_value 17"
+   },
+   "last_params": null
+  },
+  "total": 1,
+  "update_param": {
+   "band_no": "sample band_no 18",
+   "content_key": "sample content_key 19",
+   "last_paging_value": 1
+  }
+ }
+}

@@ -1,0 +1,131 @@
+{
+ "result_code": 1,
+ "result_data": {
+  "server_time": 1794000000000,
+  "channel": {
+   "name": "sample name 2",
+   "updated_at": 1794007200000,
+   "notification": "on",
+   "chat_push_type": "PUSH",
+   "member_push_enabled": true,
+   "message_period": "year",
+   "participants": [
+    {
+     "user_no": 100004,
+     "band_no": 100005,
+     "name": "sample name 6",
+     "profile_image_url": "https://example.invalid/profile_image_url",
+     "role": "leader",
+     "member_type": "membership",
+     "me": false,
+     "member_key": "sample member_key 7",
+     "created_at": 1794025200000
+    },
+    {
+     "user_no": 100009,
+     "band_no": 100010,
+     "name": "sample name 11",
+     "profile_image_url": "https://example.invalid/profile_image_url",
+     "role": "member",
+     "member_type": "membership",
+     "me": false,
+     "member_key": "sample member_key 12",
+     "created_at": 1794043200000
+    },
+    {
+     "user_no": 100014,
+     "band_no": 100015,
+     "name": "sample name 16",
+     "profile_image_url": "https://example.invalid/profile_image_url",
+     "role": "member",
+     "member_type": "membership",
+     "me": false,
+     "member_key": "sample member_key 17",
+     "created_at": 1794061200000
+    }
+   ],
+   "band": {
+    "type": "group",
+    "is_recruiting": false,
+    "band_no": 100019,
+    "name": "sample name 20",
+    "cover": "https://example.invalid/cover",
+    "theme_color": "sample theme_color 21"
+   },
+   "user_status": "ready",
+   "permitted_operation": [
+    "sample permitted_operation 22"
+   ],
+   "unread_count_visible": true,
+   "is_messaging_disabled": false,
+   "is_big": false,
+   "save_chat_history_agreement_state": "none",
+   "message_period_as_minute": 100023,
+   "channel_id": "sample channel_id 24",
+   "is_group": true,
+   "participant_count": 59,
+   "participant_count_max": 2000,
+   "is_creator_quit_disabled": false,
+   "latest_read_message_no": 0,
+   "oldest_readable_message_no": 0,
+   "oldest_server_message_no": 1,
+   "latest_message": {
+    "creator": {}
+   },
+   "message_readers_visible_state": "disabled",
+   "created_at": 1794086400000,
+   "is_default_channel": true,
+   "is_open": true
+  },
+  "is_full_sync": true,
+  "users": [
+   {
+    "user_no": 100026,
+    "band_no": 100027,
+    "name": "sample name 28",
+    "role": "member",
+    "member_type": "membership",
+    "me": false,
+    "member_key": "sample member_key 29",
+    "created_at": 1794104400000,
+    "status": "ready",
+    "updated_at": 1794108000000,
+    "participated_at": 1794111600000,
+    "acted_at": 1794115200000,
+    "is_invitation_accepted": true
+   },
+   {
+    "user_no": 100034,
+    "band_no": 100035,
+    "name": "sample name 36",
+    "profile_image_url": "https://example.invalid/profile_image_url",
+    "role": "member",
+    "member_type": "membership",
+    "me": false,
+    "member_key": "sample member_key 37",
+    "created_at": 1794133200000,
+    "status": "ready",
+    "updated_at": 1794136800000,
+    "participated_at": 1794140400000,
+    "acted_at": 1794144000000,
+    "is_invitation_accepted": true
+   },
+   {
+    "user_no": 100042,
+    "band_no": 100043,
+    "name": "sample name 44",
+    "profile_image_url": "https://example.invalid/profile_image_url",
+    "role": "member",
+    "member_type": "membership",
+    "me": false,
+    "member_key": "sample member_key 45",
+    "created_at": 1794162000000,
+    "status": "ready",
+    "updated_at": 1794165600000,
+    "participated_at": 1794169200000,
+    "acted_at": 1794172800000,
+    "is_invitation_accepted": true
+   }
+  ]
+ }
+}
