@@ -3,7 +3,7 @@
   "manifest_version": "0.3",
   "name": "band-mcp",
   "display_name": "BAND",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Unofficial BAND (band.us) tools for Claude — bands, posts, comments, events, members and chats via your signed-in browser",
   "author": {
     "name": "Chris Chall",

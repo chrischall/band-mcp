@@ -1,6 +1,6 @@
 {
   "name": "@chrischall/band-mcp",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "license": "MIT",
   "mcpName": "io.github.chrischall/band-mcp",
   "description": "Unofficial BAND (band.us) MCP server for Claude — bands, posts, comments, events, members and chats — developed and maintained by AI (Claude Code)",
