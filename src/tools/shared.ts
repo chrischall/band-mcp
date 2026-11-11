@@ -14,6 +14,16 @@ import {
   type View,
 } from '@chrischall/mcp-utils';
 
+/** A BAND record as it arrives: an untyped JSON object. */
+export type Rec = Record<string, unknown>;
+
+/** A BAND list answer: `items` plus `paging.next_params` for the next page. */
+export interface Paged {
+  items?: Rec[] | null;
+  paging?: { next_params?: Rec | null } | null;
+  [key: string]: unknown;
+}
+
 /**
  * The rungs every read honours. No `raw`: every record is normalized (ISO
  * times) on the way out, and `full` is already every field BAND sent.
@@ -100,7 +110,7 @@ export function attachmentCounts(att: unknown): Record<string, number> | undefin
 // ── paging ───────────────────────────────────────────────────────────────────
 
 /** BAND's `paging.next_params` as an opaque cursor; none → undefined. */
-export function encodeCursor(nextParams: Record<string, unknown> | null | undefined): string | undefined {
+export function encodeCursor(nextParams: Rec | null | undefined): string | undefined {
   return nextParams ? Buffer.from(JSON.stringify(nextParams)).toString('base64url') : undefined;
 }
 
@@ -120,8 +130,13 @@ export function decodeCursor(cursor: string): Record<string, string> {
   return Object.fromEntries(Object.entries(parsed).map(([k, v]) => [k, typeof v === 'string' ? v : JSON.stringify(v)]));
 }
 
+/** The query params a cursor carries; no cursor → the first page. */
+export function pagingParams(cursor: string | undefined): Record<string, string> {
+  return cursor ? decodeCursor(cursor) : {};
+}
+
 /** `paging.next_params` of a BAND list answer. */
-export function nextCursorOf(data: { paging?: { next_params?: Record<string, unknown> | null } | null } | null | undefined) {
+export function nextCursorOf(data: Pick<Paged, 'paging'> | null | undefined) {
   return encodeCursor(data?.paging?.next_params);
 }
 

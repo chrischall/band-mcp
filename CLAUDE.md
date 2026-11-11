@@ -33,10 +33,12 @@ npm run test:coverage  # 100% thresholds, run by CI
 - `skills/band/SKILL.md` — the MCP-usage skill (shipped with the plugin).
   `tests/docs.test.ts` requires it to name exactly the registered tools.
 - `skills/band-fpx/` — the standalone fpx skill; independent of the server.
-- `docs/BAND-API.md` — protocol notes (signing, bootstrap, endpoints). Every
-  `/vX.Y.Z/<endpoint>` literal in `src/` must appear in it (tested).
-- Env vars: a new one goes in `mint.yaml`, `server.json` and the README
-  configuration table (all three tested against `mint.yaml`).
+- `src/endpoints.ts` — every API path, the only place one is written.
+  `docs/BAND-API.md` holds the protocol notes (signing, bootstrap, endpoints);
+  every `/vX.Y.Z/<endpoint>` literal in `src/` must appear in it (tested).
+- Env vars: a new one goes in `mint.yaml`, `server.json`, the README
+  configuration table and a `manifest.json` `user_config` setting (all tested
+  against `mint.yaml`).
 
 ## Rules specific to this repo
 

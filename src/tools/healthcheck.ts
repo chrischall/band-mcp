@@ -8,9 +8,9 @@ import type { McpServer } from '@modelcontextprotocol/server';
 import { McpToolError } from '@chrischall/mcp-utils';
 import { registerCredentialHealthcheckTool } from '@chrischall/mcp-utils/healthcheck';
 import type { BandClient } from '../client.js';
+import { ENDPOINTS } from '../endpoints.js';
 import { BandBridgeError, BandSessionError, isHintedFetchproxyError } from '../session.js';
 
-export const PROFILE_ENDPOINT = '/v2.1.0/get_profile';
 const CREDENTIAL_SOURCE = 'browser session (ContextMint Bridge)';
 
 function classify(err: unknown): { kind: string; hint?: string; detail?: Record<string, unknown> } | undefined {
@@ -27,7 +27,7 @@ export function registerHealthcheckTool(server: McpServer, client: BandClient): 
     server,
     prefix: 'band',
     hostLabel: 'api-us.band.us',
-    probePath: PROFILE_ENDPOINT,
+    probePath: ENDPOINTS.PROFILE,
     resolveCredential: async () => {
       const session = await client.session.get();
       return {
@@ -37,7 +37,7 @@ export function registerHealthcheckTool(server: McpServer, client: BandClient): 
       };
     },
     probeFn: async () => {
-      const profile = await client.get<unknown>(PROFILE_ENDPOINT);
+      const profile = await client.get<unknown>(ENDPOINTS.PROFILE);
       if (typeof profile !== 'object' || profile === null) {
         throw new McpToolError('BAND answered, but returned no profile for the signed-in user.');
       }

@@ -4,6 +4,7 @@ import { z } from 'zod';
 import type { McpServer } from '@modelcontextprotocol/server';
 import { minifiedResult, toolAnnotations } from '@chrischall/mcp-utils';
 import type { BandClient } from '../client.js';
+import { ENDPOINTS } from '../endpoints.js';
 import { familyMeta } from './hints.js';
 
 export function registerNewsTools(server: McpServer, client: BandClient): void {
@@ -18,7 +19,7 @@ export function registerNewsTools(server: McpServer, client: BandClient): void {
       inputSchema: z.object({}),
     },
     async () => {
-      const data = await client.get('/v1.2.0/get_news_count', {
+      const data = await client.get(ENDPOINTS.NEWS_COUNT, {
         without_post_news: false,
         without_album_news: false,
         with_chat_message_count: true,
