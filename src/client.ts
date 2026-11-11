@@ -136,20 +136,21 @@ export class BandClient {
   private async call<T>(method: 'GET' | 'POST', endpoint: string, params: QueryParams, body: string | undefined): Promise<T> {
     const before = this.session.generation;
     let session = await this.session.get();
+    // A session lifted while this call waited was just read from the browser:
+    // on a 300, reading it again would get the same answer.
+    const fresh = this.session.generation !== before;
     let envelope = await this.send(method, endpoint, params, body, session);
-    if (envelope.result_code === 300) {
-      // 300 = BAND refused the call (nothing was applied), so one retry is safe —
-      // but only on a session that predates this call. One lifted for THIS call
-      // was just read from the browser; reading it again would get the same.
+    if (envelope.result_code === 300 && !fresh) {
+      // 300 = BAND refused the call (nothing was applied), so one retry is safe.
+      // invalidate() is a no-op if another call already re-lifted; get() then
+      // hands back that newer session instead of lifting again.
       this.session.invalidate(session);
-      if (this.session.generation === before) {
-        session = await this.session.get();
-        envelope = await this.send(method, endpoint, params, body, session);
-        if (envelope.result_code === 300) this.session.invalidate(session);
-      }
-      if (envelope.result_code === 300) {
-        throw new BandSessionError('BAND rejected the session (result_code 300) even after re-reading it from the browser', RENEW_HINT);
-      }
+      session = await this.session.get();
+      envelope = await this.send(method, endpoint, params, body, session);
+    }
+    if (envelope.result_code === 300) {
+      this.session.invalidate(session);
+      throw new BandSessionError('BAND rejected the session (result_code 300) even after re-reading it from the browser', RENEW_HINT);
     }
     if (envelope.result_code !== 1) {
       const code = envelope.result_code;
