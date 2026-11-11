@@ -104,6 +104,22 @@ describe('packaging', () => {
     expect(mint).toMatch(/^egress:\n\s+allow:\n\s+- api-us\.band\.us\n/m);
   });
 
+  it('the .mcpb exposes every env var mint.yaml declares as an optional user_config setting', () => {
+    const manifest = read('manifest.json');
+    const env = manifest.server.mcp_config.env as Record<string, string>;
+    const declared = [...readText('mint.yaml').matchAll(/^ {2}- name: (\w+)$/gm)].map((m) => m[1]!);
+    expect(declared.length).toBeGreaterThan(0);
+    expect(Object.keys(env).sort()).toEqual([...declared].sort());
+    for (const [name, value] of Object.entries(env)) {
+      const key = /^\$\{user_config\.(\w+)\}$/.exec(value)?.[1];
+      expect(key, name).toBeDefined();
+      const setting = manifest.user_config[key!];
+      expect(setting, `${name} → user_config.${key}`).toBeDefined();
+      expect(setting.required, name).toBe(false);
+      expect(String(setting.description), name).toMatch(/\S/);
+    }
+  });
+
   it('mint.yaml summary fits the catalog limit (200 UTF-16 units) and ends a sentence', () => {
     // `summary: >-` is a folded scalar: its indented lines join with spaces.
     const block = readText('mint.yaml').match(/^summary: >-\n((?: {2}.*\n)+)/m);

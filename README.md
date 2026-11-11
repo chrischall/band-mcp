@@ -55,7 +55,7 @@ The plugin also installs the [`band` skill](skills/band/SKILL.md), which teaches
 
 ### Claude Desktop (.mcpb)
 
-Install the `.mcpb` bundle from the [latest release](https://github.com/chrischall/band-mcp/releases).
+Install the `.mcpb` bundle from the [latest release](https://github.com/chrischall/band-mcp/releases). Its optional settings (time zone, write confirmation mode, confirmation prompts, debug logging, bridge port) set the environment variables in [Configuration](#configuration); leave them blank for the defaults.
 
 ## How it signs in
 
@@ -93,7 +93,7 @@ The band.us session lasts a few days. The server reads it again from your tab wh
 `band_create_post` and `band_create_comment` are confirmation-gated:
 
 - **Clients that support MCP elicitation** show a real confirmation prompt that names the band and shows the text.
-- **Other clients (claude.ai, Claude Desktop)** make **no** change on the first call. It returns a preview plus a single-use, short-lived `confirmToken`. Only a repeat call carrying that token writes. If anything in the request changed in between, the token is refused.
+- **Other clients (claude.ai, Claude Desktop)** make **no** change on the first call. It returns a preview plus a single-use, short-lived `confirmToken`. Only a repeat call carrying that token writes. If anything in the request changed in between, or the browser is now signed in to a different BAND account, the token is refused.
 
 `MCP_CONFIRM_MODE` decides who may use that token:
 
