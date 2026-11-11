@@ -34,6 +34,8 @@ calls BAND's API directly. It never sees or stores your password.
 | `band_get_event` | Read one calendar event. |
 | `band_list_chats` | List a band's chat channels with unread counts and latest message. |
 | `band_get_chat` | Read one chat channel: participants, unread state and latest message (no history). |
+| `band_create_post` | Write a new post to a band (confirm-gated: preview first, then post). |
+| `band_create_comment` | Comment on a band post (confirm-gated: preview first, then comment). |
 
 ## Shell access without the MCP
 

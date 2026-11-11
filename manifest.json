@@ -104,6 +104,14 @@
     {
       "name": "band_get_chat",
       "description": "Read one chat channel: participants, unread state and latest message (no history)."
+    },
+    {
+      "name": "band_create_post",
+      "description": "Write a new post to a band (confirm-gated: preview first, then post)."
+    },
+    {
+      "name": "band_create_comment",
+      "description": "Comment on a band post (confirm-gated: preview first, then comment)."
     }
   ],
   "compatibility": {

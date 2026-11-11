@@ -10,6 +10,7 @@ import { registerEventTools } from './events.js';
 import { registerHealthcheckTool } from './healthcheck.js';
 import { registerNewsTools } from './news.js';
 import { registerPostTools } from './posts.js';
+import { registerWriteTools } from './writes.js';
 
 /** The dependency every registrar receives: the signed BAND API client. */
 export type ToolDeps = BandClient;
@@ -23,4 +24,5 @@ export const TOOL_REGISTRARS: readonly ToolRegistrar[] = [
   registerPostTools,
   registerEventTools,
   registerChatTools,
+  registerWriteTools,
 ];

@@ -59,6 +59,8 @@ export interface SentRequest {
   path: string;
   query: URLSearchParams;
   body?: string;
+  /** The `md` signature header sent. */
+  md?: string;
 }
 
 /**
@@ -81,7 +83,14 @@ export async function toolHarness(
     fetchImpl: (async (url: string, init: RequestInit) => {
       const u = new URL(String(url));
       expect(`${u.origin}`).toBe(API_BASE);
-      sent.push({ method: String(init.method), path: u.pathname, query: u.searchParams, ...(init.body !== undefined ? { body: String(init.body) } : {}) });
+      const md = (init.headers as Record<string, string> | undefined)?.md;
+      sent.push({
+        method: String(init.method),
+        path: u.pathname,
+        query: u.searchParams,
+        ...(init.body !== undefined ? { body: String(init.body) } : {}),
+        ...(md !== undefined ? { md } : {}),
+      });
       if (queue.length === 0) throw new Error('unexpected fetch');
       const next = queue.shift();
       if (next instanceof Error) throw next;

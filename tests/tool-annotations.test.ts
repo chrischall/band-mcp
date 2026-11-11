@@ -49,10 +49,12 @@ const EXPECTED_INTENT: Record<string, string> = {
   band_list_chats: 'lookup',
   band_get_chat: 'lookup',
   band_whats_new: 'whats-new',
+  band_create_post: 'send',
+  band_create_comment: 'send',
 };
 
 describe('tool annotations', () => {
-  it('registers the read surface', async () => {
+  it('registers the read surface and the two writes', async () => {
     const names = (await listed()).map((t) => t.name).sort();
     expect(names).toEqual([...Object.keys(EXPECTED_INTENT), 'band_healthcheck'].sort());
   });
@@ -96,5 +98,16 @@ describe('tool annotations', () => {
   it('band_list_events names its own date arguments in `when`', async () => {
     const t = (await listed()).find((x) => x.name === 'band_list_events')!;
     expect(t._meta?.mint?.when).toEqual({ start: 'from', end: 'to' });
+  });
+});
+
+describe('write tools', () => {
+  it('are not read-only, not destructive, and carry the confirm flow in the description', async () => {
+    for (const name of ['band_create_post', 'band_create_comment']) {
+      const t = (await listed()).find((x) => x.name === name)!;
+      expect(t.annotations?.readOnlyHint, name).toBe(false);
+      expect(t.annotations?.destructiveHint, name).toBe(false);
+      expect(t.description, name).toMatch(/confirmToken/);
+    }
   });
 });
