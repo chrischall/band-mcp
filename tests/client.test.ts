@@ -124,6 +124,33 @@ describe('BandClient.get', () => {
     expect(sent).toHaveLength(3);
   });
 
+  it("a stale-session 300 arriving AFTER another call's re-lift retries on that fresh session", async () => {
+    const no = { result_code: 300, result_data: {} };
+    let releaseB!: (r: Response) => void;
+    const bAnswer = new Promise<Response>((r) => (releaseB = r));
+    const answers: Array<() => Promise<Response> | Response> = [
+      () => Response.json(ok({})), // warm
+      () => bAnswer, // B's first send (held until A has re-lifted)
+      () => Response.json(no), // A's first send
+      () => Response.json(ok({ a: 1 })), // A's retry on the fresh session
+      () => Response.json(ok({ b: 2 })), // B's retry on that same fresh session
+    ];
+    const readCookies = vi.fn(async () => ({ band_session: bandSessionJwt() }));
+    const client = new BandClient({
+      readCookies,
+      fetchGetKey: async (t) => getKeyBody({ t }),
+      now: () => NOW_MS,
+      env: { MCP_USER_TZ: 'UTC' },
+      fetchImpl: (async () => answers.shift()!()) as unknown as typeof fetch,
+    });
+    await client.get('/warm');
+    const b = client.get('/b');
+    await expect(client.get('/a')).resolves.toEqual({ a: 1 });
+    releaseB(Response.json(no));
+    await expect(b).resolves.toEqual({ b: 2 });
+    expect(readCookies).toHaveBeenCalledTimes(2);
+  });
+
   it('concurrent calls rejected with 300 share ONE re-lift', async () => {
     const no = { result_code: 300, result_data: {} };
     const { client, sent, readCookies } = clientWith([ok({}), no, no, ok({ a: 1 }), ok({ b: 2 })]);
