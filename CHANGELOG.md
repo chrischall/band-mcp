@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/chrischall/band-mcp/compare/v0.2.0...v0.2.1) (2026-11-25)
+
+
+### Bug Fixes
+
+* **deps:** Bump @chrischall/mcp-utils from 3.7.2 to 3.9.0 in the production-dependencies group ([#6](https://github.com/chrischall/band-mcp/issues/6)) ([c56b8d3](https://github.com/chrischall/band-mcp/commit/c56b8d3e04ad02c28fb0506e1fa40c4eed5d5319))
+
 ## [0.2.0](https://github.com/chrischall/band-mcp/compare/v0.1.0...v0.2.0) (2026-11-11)
 
 
